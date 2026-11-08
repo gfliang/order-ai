@@ -5,7 +5,8 @@ spring:
   application:
     name: order-ai-backend
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3307}/${MYSQL_DATABASE:order_ai}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    # TiDB Cloud 强制 TLS；verifyServerCertificate=false 跳过自签 CA 校验，本地 MySQL 8 亦兼容
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3307}/${MYSQL_DATABASE:order_ai}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=true&requireSSL=true&verifyServerCertificate=false&allowPublicKeyRetrieval=true
     username: ${MYSQL_USERNAME:root}
     password: ${MYSQL_PASSWORD:your_password}
     driver-class-name: com.mysql.cj.jdbc.Driver

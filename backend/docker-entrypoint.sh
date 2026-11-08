@@ -9,10 +9,11 @@ echo "等待 MySQL ${HOST}:${PORT} 就绪 ..."
 for _ in $(seq 1 60); do
   if (echo > "/dev/tcp/${HOST}/${PORT}") >/dev/null 2>&1; then
     echo "MySQL 已就绪，开始启动后端"
-    exec java -jar /app/app.jar
+    # Render 免费实例仅 512MB 内存，限制堆占比避免被 OOM Kill
+    exec java -XX:MaxRAMPercentage=60 -jar /app/app.jar
   fi
   sleep 2
 done
 
 echo "等待 MySQL 超时（120 秒），直接启动后端" >&2
-exec java -jar /app/app.jar
+exec java -XX:MaxRAMPercentage=60 -jar /app/app.jar
