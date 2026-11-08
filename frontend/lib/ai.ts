@@ -1,4 +1,4 @@
-import { USER_ID_STORAGE_KEY } from "./api";
+import { API_BASE_URL, USER_ID_STORAGE_KEY } from "./api";
 
 /** 发送给后端的会话上下文消息，仅保留角色与文本 */
 export interface ChatHistoryMessage {
@@ -27,8 +27,6 @@ export interface StreamHandlers {
 export const MAX_CONTEXT_MESSAGES = 20;
 export const MAX_CONTEXT_CHARS = 10000;
 export const MAX_SINGLE_MESSAGE_CHARS = 4000;
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
 
 /** 构造本轮请求上下文：保留最近的完整对话，并裁剪到后端允许的上限 */
 export function buildContext(

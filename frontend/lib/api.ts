@@ -5,7 +5,7 @@ export const USER_ID_STORAGE_KEY = "order_ai_user_id";
 const RAW_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
 
 // Render 蓝图注入的是主机名（不含协议），这里统一补全，便于本地与线上共用同一套代码
-const API_BASE_URL = RAW_API_BASE_URL.startsWith("http")
+export const API_BASE_URL = RAW_API_BASE_URL.startsWith("http")
   ? RAW_API_BASE_URL
   : `https://${RAW_API_BASE_URL}`;
 
