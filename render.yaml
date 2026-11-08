@@ -1,0 +1,63 @@
+services:
+  # 私有 MySQL 服务：不暴露公网，仅后端可访问
+  - type: pserv
+    name: order-ai-mysql
+    runtime: docker
+    plan: free
+    dockerContext: ./deploy/mysql
+    dockerfilePath: ./deploy/mysql/Dockerfile
+    # 免费实例内存有限，限制 MySQL 8 的缓冲池和性能库开销
+    dockerCommand: mysqld --innodb-buffer-pool-size=64M --performance-schema=OFF --max-connections=60
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+      - key: MYSQL_DATABASE
+        value: order_ai
+
+  # 后端 Spring Boot（Docker）
+  - type: web
+    name: order-ai-backend
+    runtime: docker
+    plan: free
+    dockerContext: ./backend
+    dockerfilePath: ./backend/Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      # Render 通过 PORT 指定监听端口，Spring Boot 使用 SERVER_PORT 对应
+      - key: SERVER_PORT
+        value: 10000
+      - key: MYSQL_HOST
+        value: order-ai-mysql
+      - key: MYSQL_PORT
+        value: 3306
+      - key: MYSQL_DATABASE
+        value: order_ai
+      - key: MYSQL_USERNAME
+        value: root
+      - key: MYSQL_PASSWORD
+        fromService:
+          type: pserv
+          name: order-ai-mysql
+          envVarKey: MYSQL_ROOT_PASSWORD
+      - key: QWEN_BASE_URL
+        value: https://dashscope.aliyuncs.com/compatible-mode/v1
+      - key: QWEN_MODEL
+        value: qwen-max
+      # 首次部署时在 Render 控制台填写真实密钥
+      - key: QWEN_API_KEY
+        sync: false
+
+  # 前端 Next.js
+  - type: web
+    name: order-ai-frontend
+    runtime: node
+    plan: free
+    buildCommand: npm i -g pnpm@9 && pnpm install --frozen-lockfile && pnpm build
+    startCommand: pnpm start
+    envVars:
+      # 自动取后端服务的内部主机名，前端代码会补全 https://
+      - key: NEXT_PUBLIC_API_BASE_URL
+        fromService:
+          type: web
+          name: order-ai-backend
+          property: host

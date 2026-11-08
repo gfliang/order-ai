@@ -1,0 +1,23 @@
+# 环境变量（含密钥，禁止提交）
+.env
+
+# Java / Maven
+target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+.idea/
+*.iml
+.vscode/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+
+# 系统文件
+.DS_Store
+
+# 日志
+*.log

@@ -1,0 +1,5 @@
+# 允许 sharp 执行安装脚本（Next.js 图片优化依赖）
+allowBuilds:
+  sharp: true
+onlyBuiltDependencies:
+  - sharp
