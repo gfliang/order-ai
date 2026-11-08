@@ -39,9 +39,6 @@ services:
     buildCommand: pnpm install --frozen-lockfile && pnpm build
     startCommand: pnpm start
     envVars:
-      # 自动取后端服务的主机名，前端代码会补全 https://
+      # 浏览器访问必须用后端公网域名（fromService 注入的内部主机名浏览器不可解析）
       - key: NEXT_PUBLIC_API_BASE_URL
-        fromService:
-          type: web
-          name: order-ai-backend
-          property: host
+        value: order-ai-backend.onrender.com
