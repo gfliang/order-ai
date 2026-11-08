@@ -30,12 +30,13 @@ services:
       - key: QWEN_API_KEY
         sync: false
 
-  # 前端 Next.js
+  # 前端 Next.js（packageManager 字段让 Render 通过 corepack 自动安装 pnpm）
   - type: web
     name: order-ai-frontend
     runtime: node
     plan: free
-    buildCommand: npm i -g pnpm@9 && pnpm install --frozen-lockfile && pnpm build
+    rootDir: frontend
+    buildCommand: pnpm install --frozen-lockfile && pnpm build
     startCommand: pnpm start
     envVars:
       # 自动取后端服务的主机名，前端代码会补全 https://
